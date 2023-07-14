@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
     public GameObject wallPrefab;
     public GameObject wallsParent;
     public CameraMotor mainCameraMotor;
-    int mapSizeX = 100;
-    int mapSizeY = 100;
+    public int mapSizeX = 100;
+    public int mapSizeY = 100;
     public Player currentPlayer;
+    public GameObject fireObject;
+    public GameObject sledgehammer;
 
     public List<Wall> allWalls = new List<Wall>();
 
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
         currentPlayer = newPlayer.GetComponent<Player>();
         mainCameraMotor.lookAt = newPlayer.gameObject.transform;
         BuildMap();
+        StartFire();
     }
     void EndGame()
     {
@@ -53,6 +56,7 @@ public class GameManager : MonoBehaviour
             transform.position + 3f * Vector3.up + 3f * Vector3.right,
             transform.rotation
             );
+        newPlayer.GetComponent<Player>().GM = this;
         return newPlayer;
     }
 
@@ -68,8 +72,12 @@ public class GameManager : MonoBehaviour
         BuildWalls(topRight, -1f * Vector3.up, 10);
         BuildWalls(bottomRight, -1f * Vector3.right, 10);
         BuildWalls(bottomLeft, Vector3.up, 10);
+    }
 
-
+    void StartFire()
+    {
+        allWalls[0].SetOnFire();
+        allWalls[1].SetOnFire();
     }
 
     // no negative numbers
@@ -86,8 +94,18 @@ public class GameManager : MonoBehaviour
 
         Wall newWallScript = newWall.GetComponent<Wall>();
         newWallScript.GM = this;
+        if (mapGrid[x, y] != null)
+        {
+            Destroy(mapGrid[x, y].gameObject);
+        }
         mapGrid[x, y] = newWallScript;
+
+        //Debug.Log($"x:{x}, y:{y}");
+
+        newWallScript.coordinates[0] = x;
+        newWallScript.coordinates[1] = y;
         allWalls.Add(newWallScript);
+        newWallScript.UpdateWallsAroundMe();
     }
     void BuildWalls(Vector3 startPos, Vector3 direction, int length)
     {
@@ -98,5 +116,14 @@ public class GameManager : MonoBehaviour
             BuildWall((int)curPos.x, (int)curPos.y);
             curPos += change;
         }
+    }
+    public void GameOver()
+    {
+        mainCameraMotor.lookAt = transform;
+        foreach (Wall item in allWalls)
+        {
+            Destroy(item.gameObject);
+        }
+        allWalls.Clear();
     }
 }

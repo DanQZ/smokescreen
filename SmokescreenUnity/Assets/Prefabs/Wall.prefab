@@ -156,8 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3024601e1b45ec340a7f11a6ee21b953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GM: {fileID: 0}
   currentSprite: {fileID: 3293341792181998881}
   standingSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   destroyedSprite: {fileID: 0}
   playerCanPass: 0
   onFire: 0
+  fireObject: {fileID: 6730578398049243202, guid: bc62029ff2e02414f867dce29f65b261, type: 3}
+  allNearbyWalls: []

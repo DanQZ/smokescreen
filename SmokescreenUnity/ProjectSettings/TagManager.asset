@@ -6,6 +6,7 @@ TagManager:
   tags:
   - fire
   - wall
+  - hammer
   layers:
   - Default
   - TransparentFX

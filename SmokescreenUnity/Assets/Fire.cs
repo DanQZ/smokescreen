@@ -4,22 +4,11 @@ using UnityEngine;
 
 public class Fire : MonoBehaviour
 {
-    public float hp;
-    Player curPlayer;
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    public Player currentPlayer;
     // set in unity physics that this will ONLY collide with the player
     void OnTriggerStay2D(Collider2D collision)
     {
-
+        Debug.Log("player shit");
+        currentPlayer.TakeDamage(5f * Time.deltaTime);
     }
 }

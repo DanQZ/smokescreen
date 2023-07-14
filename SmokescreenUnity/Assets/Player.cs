@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public GameManager GM;
     bool canSprint;
+    bool canHammer;
     public float hp;
     float hpMax;
     public float air;
@@ -21,6 +23,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         canSprint = true;
+        canHammer = true;
         InitStats();
     }
 
@@ -77,6 +80,13 @@ public class Player : MonoBehaviour
                 sprint = true;
             }
         }
+        if (Input.GetKey("f"))
+        {
+            if (stamina >= 25f && canHammer)
+            {
+                Sledgehammer();
+            }
+        }
 
         moveVector = Vector3.Normalize(moveVector);
         // use stamina to sprint
@@ -116,20 +126,34 @@ public class Player : MonoBehaviour
         Debug.Log("spraying water");
         water = Mathf.Max(0f, water - 1f * Time.deltaTime);
     }
-    void TakeDamage(float amount)
+    void Sledgehammer()
     {
-        hp -= -1f * Mathf.Abs(amount);
+        Debug.Log("sledgehammer");
+        Instantiate(GM.sledgehammer, transform.position + lookDirection, transform.rotation);
+        stamina -= 25f;
+        StartCoroutine(SledgeCooldown());
+    }
+    IEnumerator SledgeCooldown()
+    {
+        canHammer = false;
+        yield return new WaitForSeconds(1);
+        canHammer = true;
+    }
+    public void TakeDamage(float amount)
+    {
+        hp -= Mathf.Abs(amount);
         if (hp <= 0f)
         {
             Die();
         }
     }
-    void Heal(float amount)
+    public void Heal(float amount)
     {
         hp = Mathf.Max(hpMax, hp + Mathf.Abs(amount));
     }
     void Die()
     {
+        GM.GameOver();
         Destroy(this.gameObject);
     }
 }
