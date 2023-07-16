@@ -18,10 +18,12 @@ public class GameManager : MonoBehaviour
     public GameObject fireObject;
     public GameObject sledgehammer;
 
+    public GameObject building1;
     public List<Wall> allWalls = new List<Wall>();
     public Wall[,] mapGrid;
     List<GameObject> allObjectives = new List<GameObject>();
     public int uncollectedObjectives;
+
 
     bool gameStarted;
 
@@ -43,7 +45,11 @@ public class GameManager : MonoBehaviour
         GameObject newPlayer = SpawnPlayer();
         currentPlayer = newPlayer.GetComponent<Player>();
         mainCameraMotor.lookAt = newPlayer.gameObject.transform;
-        BuildMap();
+
+        SpawnPremadeMap();
+
+        //BuildMap();
+
         StartFire();
         SpawnObjective(currentPlayer.gameObject.transform.position + transform.up * 5f + transform.right * 5f);
         gameStarted = true;
@@ -53,6 +59,11 @@ public class GameManager : MonoBehaviour
         Destroy(currentPlayer.gameObject);
         mainCameraMotor.lookAt = this.gameObject.transform;
         gameStarted = false;
+        foreach (Wall item in allWalls)
+        {
+            Destroy(item.gameObject);
+        }
+        allWalls.Clear();
         foreach (GameObject item in allObjectives)
         {
             Destroy(item);
@@ -100,6 +111,10 @@ public class GameManager : MonoBehaviour
         gameStats.text = $"Current Game:\n"
         + $"Objectives Left: {uncollectedObjectives}\n"
         ;
+        if (uncollectedObjectives <= 0)
+        {
+            gameStats.text += "Exit building ASAP";
+        }
     }
 
     GameObject SpawnPlayer()
@@ -119,6 +134,21 @@ public class GameManager : MonoBehaviour
         newObjective.GetComponent<Objective>().GM = this;
         uncollectedObjectives++;
         return newObjective;
+    }
+
+    void SpawnPremadeMap()
+    {
+        GameObject newMap = Instantiate(building1, transform.position, transform.rotation);
+        foreach (Transform g in newMap.transform.GetComponentsInChildren<Transform>())
+        {
+            Wall checkedWall = g.gameObject.GetComponent<Wall>();
+            if (checkedWall != null)
+            {
+                checkedWall.GM = this;
+                checkedWall.UpdateWallsAroundMe();
+                allWalls.Add(checkedWall);
+            }
+        }
     }
 
     void BuildMap()
@@ -178,13 +208,43 @@ public class GameManager : MonoBehaviour
             curPos += change;
         }
     }
+    public void CheckIfBuildingCollapse()
+    {
+        int wallsDestroyed = 0;
+        foreach (Wall checkedWall in allWalls)
+        {
+            if (checkedWall.isDestroyed)
+            {
+                wallsDestroyed++;
+            }
+        }
+        // if % of all walls are destroyed, collapse
+        if ((float)wallsDestroyed > (float)allWalls.Count * 0.5f)
+        {
+            foreach (Wall checkedWall in allWalls)
+            {
+                if (!checkedWall.isDestroyed)
+                {
+                    checkedWall.BeDestroyed(false);
+                }
+            }
+            if (currentPlayer.isInside)
+            { // player immdiately dies if inside collapsing building
+                currentPlayer.Die();
+            }
+        }
+    }
     public void GameOver()
     {
         mainCameraMotor.lookAt = transform;
-        foreach (Wall item in allWalls)
+        if (uncollectedObjectives <= 0 && !currentPlayer.isInside)
         {
-            Destroy(item.gameObject);
+            Debug.Log("Mission success");
         }
-        allWalls.Clear();
+        else
+        {
+            Debug.Log("Mission failed");
+        }
+        EndGame();
     }
 }

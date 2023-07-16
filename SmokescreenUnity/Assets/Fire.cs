@@ -9,6 +9,6 @@ public class Fire : MonoBehaviour
     void OnTriggerStay2D(Collider2D collision)
     {
         Debug.Log("player shit");
-        currentPlayer.TakeDamage(5f * Time.deltaTime);
+        currentPlayer.TakeDamage(2f * Time.deltaTime);
     }
 }

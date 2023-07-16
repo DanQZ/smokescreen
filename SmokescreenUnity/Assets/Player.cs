@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameManager GM;
+    public bool isInside;
     public bool canSprint;
     public bool canHammer;
     public float hp;
@@ -44,6 +45,18 @@ public class Player : MonoBehaviour
     {
         KeyboardControls();
         UpdateAir();
+        CheckIfInside();
+    }
+    void CheckIfInside()
+    {
+        if (transform.position.x < 0f || transform.position.y < 0f)
+        {
+            isInside = false;
+        }
+        else
+        {
+            isInside = true;
+        }
     }
     void UpdateAir()
     {
@@ -151,7 +164,7 @@ public class Player : MonoBehaviour
     {
         hp = Mathf.Max(hpMax, hp + Mathf.Abs(amount));
     }
-    void Die()
+    public void Die()
     {
         GM.GameOver();
         Destroy(this.gameObject);

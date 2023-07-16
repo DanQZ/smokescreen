@@ -15,6 +15,7 @@ public class Wall : MonoBehaviour
     public Sprite destroyedSprite;
     public bool playerCanPass;
     public bool onFire;
+    public bool isDestroyed;
     public GameObject fireGO;
     public List<Wall> allNearbyWalls = new List<Wall>();
     void Awake()
@@ -23,23 +24,24 @@ public class Wall : MonoBehaviour
         coordinates = new int[2];
         hp = 100f;
         wetness = 0f;
+        isDestroyed = false;
         playerCanPass = false;
         currentSprite.sprite = standingSprite;
     }
     void Start()
     {
-        InvokeRepeating("Tick", 0, 1.0f);
+        float tickSpeed = 10.0f;
+        InvokeRepeating("Tick", 0, 1f / tickSpeed);
     }
-
     void Tick()
     {
-        if (onFire)
+        if (onFire && hp > 0f)
         {
             SpreadFire();
-            hp--;
+            TakeDamage(Random.Range(0f, 2f));
             if (hp <= 0f)
             {
-                BeDestroyed();
+                BeDestroyed(true);
             }
         }
     }
@@ -48,7 +50,7 @@ public class Wall : MonoBehaviour
         foreach (Wall checkWall in allNearbyWalls)
         {
             float chance = Random.Range(0f, 1f);
-            if (chance < 0.01f)
+            if (chance <= 0.01f)
             {
                 checkWall.SetOnFire();
             }
@@ -92,19 +94,34 @@ public class Wall : MonoBehaviour
         hp -= Mathf.Abs(amount);
         if (hp <= 0f)
         {
-            BeDestroyed();
+            BeDestroyed(true);
         }
     }
-    void BeDestroyed()
+    public void BeDestroyed(bool checkForCollapse)
     {
         Extinguish();
         playerCanPass = true;
         GetComponent<BoxCollider2D>().enabled = false;
-        currentSprite.sprite = destroyedSprite;
+
+        if (destroyedSprite != null)
+        {
+            currentSprite.sprite = destroyedSprite;
+        }
+        else
+        {
+            currentSprite.color = Color.red;
+        }
+        isDestroyed = true;
+
+        if (checkForCollapse)
+        {
+            GM.CheckIfBuildingCollapse();
+        }
     }
 
     public void UpdateWallsAroundMe()
     {
+        float fireSpreadDistance = 2.5f;
         allNearbyWalls.Clear();
         foreach (Wall checkWall in GM.allWalls)
         {
@@ -114,7 +131,7 @@ public class Wall : MonoBehaviour
             }
             float xDiff = Mathf.Abs(checkWall.transform.position.x - transform.position.x);
             float yDiff = Mathf.Abs(checkWall.transform.position.y - transform.position.y);
-            if (xDiff < 1.1f && yDiff < 1.1f)
+            if (xDiff < fireSpreadDistance && yDiff < fireSpreadDistance)
             {
                 allNearbyWalls.Add(checkWall);
                 checkWall.allNearbyWalls.Add(this);
