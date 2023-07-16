@@ -5,16 +5,16 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameManager GM;
-    bool canSprint;
-    bool canHammer;
+    public bool canSprint;
+    public bool canHammer;
     public float hp;
-    float hpMax;
+    public float hpMax;
     public float air;
-    float airMax;
+    public float airMax;
     public float stamina;
-    float staminaMax;
+    public float staminaMax;
     public float water;
-    float waterMax;
+    public float waterMax;
     float speed = 3f;
     public Rigidbody2D playerRB;
     public GameObject playerSprite;

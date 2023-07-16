@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public Text playerStats;
+    public Text gameStats;
     public GameObject playerPrefab;
+    public GameObject objectivePrefab;
     public GameObject wallPrefab;
     public GameObject wallsParent;
     public CameraMotor mainCameraMotor;
@@ -15,11 +19,15 @@ public class GameManager : MonoBehaviour
     public GameObject sledgehammer;
 
     public List<Wall> allWalls = new List<Wall>();
-
     public Wall[,] mapGrid;
+    List<GameObject> allObjectives = new List<GameObject>();
+    public int uncollectedObjectives;
+
+    bool gameStarted;
 
     void Awake()
     {
+        gameStarted = false;
         mainCameraMotor.lookAt = this.gameObject.transform;
         mapGrid = new Wall[mapSizeX, mapSizeY];
     }
@@ -31,22 +39,67 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
+        uncollectedObjectives = 0;
         GameObject newPlayer = SpawnPlayer();
         currentPlayer = newPlayer.GetComponent<Player>();
         mainCameraMotor.lookAt = newPlayer.gameObject.transform;
         BuildMap();
         StartFire();
+        SpawnObjective(currentPlayer.gameObject.transform.position + transform.up * 5f + transform.right * 5f);
+        gameStarted = true;
     }
     void EndGame()
     {
         Destroy(currentPlayer.gameObject);
         mainCameraMotor.lookAt = this.gameObject.transform;
+        gameStarted = false;
+        foreach (GameObject item in allObjectives)
+        {
+            Destroy(item);
+        }
+        allObjectives.Clear();
+        gameStarted = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameStarted)
+        {
+            UpdatePlayerStatText();
+            UpdateGameStatsText();
+        }
+    }
 
+    void CheckWinConditions()
+    {
+
+    }
+
+    void UpdatePlayerStatText()
+    {
+        if (currentPlayer == null)
+        {
+            Debug.Log("Error: bullshit");
+            return;
+        }
+
+        playerStats.text = $"Player Stats\n"
+        + $"HP: {Mathf.Floor(currentPlayer.hp)}/{currentPlayer.hpMax}\n"
+        + $"Air: {Mathf.Floor(currentPlayer.air)}/{currentPlayer.airMax}\n"
+        + $"Stamina: {Mathf.Floor(currentPlayer.stamina)}/{currentPlayer.staminaMax}\n"
+        ;
+        if (!currentPlayer.canSprint)
+        {
+            playerStats.text += "Exhausted!";
+        }
+    }
+
+    void UpdateGameStatsText()
+    {
+        gameStats.text = $"Current Game:\n"
+        + $"Objectives Left: {uncollectedObjectives}\n"
+        ;
     }
 
     GameObject SpawnPlayer()
@@ -58,6 +111,14 @@ public class GameManager : MonoBehaviour
             );
         newPlayer.GetComponent<Player>().GM = this;
         return newPlayer;
+    }
+
+    GameObject SpawnObjective(Vector3 position)
+    {
+        GameObject newObjective = Instantiate(objectivePrefab, position, transform.rotation);
+        newObjective.GetComponent<Objective>().GM = this;
+        uncollectedObjectives++;
+        return newObjective;
     }
 
     void BuildMap()

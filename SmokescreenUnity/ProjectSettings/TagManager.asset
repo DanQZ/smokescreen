@@ -15,7 +15,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - Fire
+  - OnlyColliderWithPlayer
   - Wall
   - 
   - 
@@ -52,4 +52,10 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1888657065
+    locked: 0
+  - name: uibackground
+    uniqueID: 1099421785
+    locked: 0
+  - name: ui
+    uniqueID: 4241375855
     locked: 0

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Wall : MonoBehaviour
 {
+    public string type;
     public GameManager GM;
     public int[] coordinates = new int[2];
     float hp;
@@ -18,6 +19,7 @@ public class Wall : MonoBehaviour
     public List<Wall> allNearbyWalls = new List<Wall>();
     void Awake()
     {
+        type = "default";
         coordinates = new int[2];
         hp = 100f;
         wetness = 0f;
@@ -152,5 +154,19 @@ public class Wall : MonoBehaviour
                 allNearbyWalls.Add(GM.mapGrid[x, y]);
             }
         }
+    }
+    void UpdateType(string newType)
+    {
+        switch (type)
+        {
+            default:
+                type = "default";
+                return;
+            case "door":
+                playerCanPass = true;
+                GetComponent<BoxCollider2D>().enabled = false;
+                break;
+        }
+        type = newType;
     }
 }
