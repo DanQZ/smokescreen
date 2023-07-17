@@ -101,6 +101,11 @@ public class Player : MonoBehaviour
             }
         }
 
+        if (Vector3.Magnitude(moveVector) > 0.1f)
+        {
+            lookDirection = moveVector;
+        }
+
         moveVector = Vector3.Normalize(moveVector);
         // use stamina to sprint
         if (sprint && stamina > 0f)
@@ -117,7 +122,6 @@ public class Player : MonoBehaviour
             stamina = Mathf.Min(staminaMax, stamina + 5f * Time.deltaTime);
         }
 
-        lookDirection = moveVector;
         playerRB.velocity = moveVector * speed;
     }
     IEnumerator SprintCD()

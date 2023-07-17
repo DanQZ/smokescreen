@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class SledgehammerScript : MonoBehaviour
 {
-    bool collided = false;
+    public List<Wall> allWallsCollided = new List<Wall>();
+    void Start()
+    {
+        Destroy(this.gameObject, 0.25f);
+    }
     void OnTriggerStay2D(Collider2D collision)
     {
-        if (collided)
-        {
-            return;
-        }
         if (collision.gameObject.tag != "wall")
         {
             return;
         }
+        foreach (Wall checkedWall in allWallsCollided)
+        {
+            if (checkedWall == collision.gameObject.GetComponent<Wall>())
+            {
+                return;
+            }
+        }
 
-        collision.gameObject.GetComponent<Wall>().TakeDamage(20f);
-        collided = true;
+        Wall collidedWall = collision.gameObject.GetComponent<Wall>();
+        allWallsCollided.Add(collidedWall);
+        collidedWall.TakeDamage(20f);
     }
 }

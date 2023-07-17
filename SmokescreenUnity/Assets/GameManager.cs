@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
     public List<Wall> allWalls = new List<Wall>();
     public Wall[,] mapGrid;
     List<GameObject> allObjectives = new List<GameObject>();
-    public int uncollectedObjectives;
+    public int primaryObjectivesLeft;
+    public int secondaryObjectivesLeft;
 
 
     bool gameStarted;
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
-        uncollectedObjectives = 0;
+        primaryObjectivesLeft = 0;
         GameObject newPlayer = SpawnPlayer();
         currentPlayer = newPlayer.GetComponent<Player>();
         mainCameraMotor.lookAt = newPlayer.gameObject.transform;
@@ -51,7 +52,9 @@ public class GameManager : MonoBehaviour
         //BuildMap();
 
         StartFire();
-        SpawnObjective(currentPlayer.gameObject.transform.position + transform.up * 5f + transform.right * 5f);
+
+        Vector3 objectivePos = currentPlayer.gameObject.transform.position + transform.up * 8f + transform.right * 5f;
+        SpawnObjective(objectivePos, "primary");
         gameStarted = true;
     }
     void EndGame()
@@ -109,9 +112,9 @@ public class GameManager : MonoBehaviour
     void UpdateGameStatsText()
     {
         gameStats.text = $"Current Game:\n"
-        + $"Objectives Left: {uncollectedObjectives}\n"
+        + $"Primary Objectives Left: {primaryObjectivesLeft}\n"
         ;
-        if (uncollectedObjectives <= 0)
+        if (primaryObjectivesLeft <= 0)
         {
             gameStats.text += "Exit building ASAP";
         }
@@ -128,11 +131,13 @@ public class GameManager : MonoBehaviour
         return newPlayer;
     }
 
-    GameObject SpawnObjective(Vector3 position)
+    GameObject SpawnObjective(Vector3 position, string objectiveType)
     {
         GameObject newObjective = Instantiate(objectivePrefab, position, transform.rotation);
-        newObjective.GetComponent<Objective>().GM = this;
-        uncollectedObjectives++;
+        Objective obScript = newObjective.GetComponent<Objective>();
+        obScript.GM = this;
+        obScript.type = objectiveType;
+        primaryObjectivesLeft++;
         return newObjective;
     }
 
@@ -237,7 +242,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         mainCameraMotor.lookAt = transform;
-        if (uncollectedObjectives <= 0 && !currentPlayer.isInside)
+        if (primaryObjectivesLeft <= 0 && !currentPlayer.isInside)
         {
             Debug.Log("Mission success");
         }

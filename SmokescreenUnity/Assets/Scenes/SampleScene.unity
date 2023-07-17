@@ -787,7 +787,8 @@ MonoBehaviour:
   sledgehammer: {fileID: 6349954526165519836, guid: 319d8fc44e2d263489fbc4d2841342cb, type: 3}
   building1: {fileID: 7421343564239689701, guid: 3caee83f3aeff4148aab1d9a4d308b21, type: 3}
   allWalls: []
-  uncollectedObjectives: 0
+  primaryObjectivesLeft: 0
+  secondaryObjectivesLeft: 0
 --- !u!1 &1335038545
 GameObject:
   m_ObjectHideFlags: 0
@@ -1091,7 +1092,7 @@ RectTransform:
   m_GameObject: {fileID: 2037797678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55806, y: 0.55806, z: 0.55806}
+  m_LocalScale: {x: 0.37529778, y: 0.37529778, z: 0.37529778}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1448302599}
@@ -1099,8 +1100,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 312.38995, y: 137.64}
-  m_SizeDelta: {x: 379.67, y: 303.65}
+  m_AnchoredPosition: {x: 295.04, y: 164.11}
+  m_SizeDelta: {x: 487.75, y: 330.07}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2037797680
 MonoBehaviour:
