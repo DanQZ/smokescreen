@@ -144,6 +144,9 @@ public class GameManager : MonoBehaviour
     void SpawnPremadeMap()
     {
         GameObject newMap = Instantiate(building1, transform.position, transform.rotation);
+        MapScript newMapScript = newMap.GetComponent<MapScript>();
+        newMapScript.currentPlayer = currentPlayer;
+        newMapScript.GM = this;
         foreach (Transform g in newMap.transform.GetComponentsInChildren<Transform>())
         {
             Wall checkedWall = g.gameObject.GetComponent<Wall>();

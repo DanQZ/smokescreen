@@ -45,18 +45,6 @@ public class Player : MonoBehaviour
     {
         KeyboardControls();
         UpdateAir();
-        CheckIfInside();
-    }
-    void CheckIfInside()
-    {
-        if (transform.position.x < 0f || transform.position.y < 0f)
-        {
-            isInside = false;
-        }
-        else
-        {
-            isInside = true;
-        }
     }
     void UpdateAir()
     {
