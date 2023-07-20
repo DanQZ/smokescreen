@@ -15,6 +15,7 @@ public class SledgehammerScript : MonoBehaviour
         {
             return;
         }
+        // dont hit the same wall twice
         foreach (Wall checkedWall in allWallsCollided)
         {
             if (checkedWall == collision.gameObject.GetComponent<Wall>())
@@ -23,8 +24,10 @@ public class SledgehammerScript : MonoBehaviour
             }
         }
 
+        Debug.Log("hit a wall");
+
         Wall collidedWall = collision.gameObject.GetComponent<Wall>();
         allWallsCollided.Add(collidedWall);
-        collidedWall.TakeDamage(20f);
+        collidedWall.TakeDamage(33f);
     }
 }

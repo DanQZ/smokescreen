@@ -49,6 +49,11 @@ public class Player : MonoBehaviour
     void UpdateAir()
     {
         air = Mathf.Max(0f, air - 0.2f * Time.deltaTime);
+        if (air <= 0f)
+        {
+            air = 0f;
+            hp -= 5f * Time.deltaTime;
+        }
     }
     void KeyboardControls()
     {
@@ -134,9 +139,10 @@ public class Player : MonoBehaviour
     void Sledgehammer()
     {
         Debug.Log("sledgehammer");
-        Instantiate(GM.sledgehammer, transform.position + lookDirection, transform.rotation);
+        GameObject newHammer = Instantiate(GM.sledgehammer, transform.position + lookDirection, transform.rotation);
         stamina -= 25f;
         StartCoroutine(SledgeCooldown());
+        newHammer.transform.parent = transform;
     }
     IEnumerator SledgeCooldown()
     {
@@ -158,6 +164,7 @@ public class Player : MonoBehaviour
     }
     public void Die()
     {
+        hp = -1f;
         GM.GameOver();
         Destroy(this.gameObject);
     }

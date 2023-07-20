@@ -6,6 +6,7 @@ public class Objective : MonoBehaviour
 {
     public GameManager GM;
     public string type;
+    // set in physics to only collide with player
     void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Objective collected");
@@ -19,6 +20,12 @@ public class Objective : MonoBehaviour
                 break;
             case "secondary":
                 GM.secondaryObjectivesLeft--;
+                break;
+            case "air":
+                GM.currentPlayer.air += 50f;
+                break;
+            case "water":
+                GM.currentPlayer.water += 50f;
                 break;
         }
         Destroy(this.gameObject);

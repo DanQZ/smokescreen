@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 public class Wall : MonoBehaviour
 {
+    public bool secretImmune;
     public string type;
     public GameManager GM;
     public int[] coordinates = new int[2];
-    float hp;
-    float wetness;
+    public float hp;
+    public float wetness;
     public SpriteRenderer currentSprite;
     public Sprite standingSprite;
     public Sprite destroyedSprite;
@@ -27,10 +28,16 @@ public class Wall : MonoBehaviour
         isDestroyed = false;
         playerCanPass = false;
         currentSprite.sprite = standingSprite;
+
+        secretImmune = false;
+        if (Random.Range(0f, 1f) < 0.1f) //10% chance to never catch fire
+        {
+            secretImmune = true;
+        }
     }
     void Start()
     {
-        float tickSpeed = 10.0f;
+        float tickSpeed = 1.0f;
         InvokeRepeating("Tick", 0, 1f / tickSpeed);
     }
     void Tick()
@@ -38,7 +45,7 @@ public class Wall : MonoBehaviour
         if (onFire && hp > 0f)
         {
             SpreadFire();
-            TakeDamage(Random.Range(0f, 2f));
+            TakeDamage(Random.Range(0f, 1f));
             if (hp <= 0f)
             {
                 BeDestroyed(true);
@@ -50,7 +57,7 @@ public class Wall : MonoBehaviour
         foreach (Wall checkWall in allNearbyWalls)
         {
             float chance = Random.Range(0f, 1f);
-            if (chance <= 0.01f)
+            if (chance <= 0.005f)
             {
                 checkWall.SetOnFire();
             }
@@ -58,7 +65,7 @@ public class Wall : MonoBehaviour
     }
     public void SetOnFire()
     {
-        if (hp <= 0f || onFire)
+        if (hp <= 0f || onFire || secretImmune)
         {
             return;
         }
@@ -121,7 +128,7 @@ public class Wall : MonoBehaviour
 
     public void UpdateWallsAroundMe()
     {
-        float fireSpreadDistance = 2.5f;
+        float fireSpreadDistance = 3.25f;
         allNearbyWalls.Clear();
         foreach (Wall checkWall in GM.allWalls)
         {

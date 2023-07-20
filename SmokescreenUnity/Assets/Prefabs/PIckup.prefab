@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 679021506556056220}
   - component: {fileID: 963431751083082807}
   m_Layer: 7
-  m_Name: Objective
+  m_Name: PIckup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GM: {fileID: 0}
+  type: 
 --- !u!58 &963431751083082807
 CircleCollider2D:
   m_ObjectHideFlags: 0

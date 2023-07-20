@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5336984340232680714}
   - component: {fileID: 3293341792181998881}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square
   m_TagString: wall
   m_Icon: {fileID: 0}
@@ -95,7 +95,8 @@ GameObject:
   - component: {fileID: 7259801755433206524}
   - component: {fileID: 7961215833127385848}
   - component: {fileID: 4337728834736044041}
-  m_Layer: 0
+  - component: {fileID: 7903210824471979718}
+  m_Layer: 8
   m_Name: Wall
   m_TagString: wall
   m_Icon: {fileID: 0}
@@ -156,11 +157,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3024601e1b45ec340a7f11a6ee21b953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  secretImmune: 0
+  type: 
   GM: {fileID: 0}
+  coordinates: 0000000000000000
+  hp: 0
+  wetness: 0
   currentSprite: {fileID: 3293341792181998881}
   standingSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   destroyedSprite: {fileID: 0}
   playerCanPass: 0
   onFire: 0
-  fireObject: {fileID: 6730578398049243202, guid: bc62029ff2e02414f867dce29f65b261, type: 3}
+  isDestroyed: 0
+  fireGO: {fileID: 0}
   allNearbyWalls: []
+--- !u!1839735485 &7903210824471979718
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7259801755433206525}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
