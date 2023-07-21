@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
         canSprint = true;
         canHammer = true;
         InitStats();
+        InvokeRepeating("UpdateFireLoudness", 0f, 0.5f);
     }
 
     void InitStats()
@@ -55,6 +56,39 @@ public class Player : MonoBehaviour
             hp -= 5f * Time.deltaTime;
         }
     }
+    public AudioSource fireSound;
+    void UpdateFireLoudness()
+    {
+        float updatedVolume = 0f;
+        float closest = 999f;
+        foreach (Wall checkedWall in GM.allWalls)
+        {
+            if (!checkedWall.onFire)
+            {
+                continue;
+            }
+            float dist = Vector3.Distance(transform.position, checkedWall.transform.position);
+            if (dist < closest)
+            {
+                closest = dist;
+            }
+        }
+        updatedVolume = 1f / closest;
+        if (closest > 10f)
+        {
+            updatedVolume = 0.1f;
+        }
+        if (closest == 999f)
+        {
+            updatedVolume = 0f;
+        }
+        fireSound.volume = updatedVolume;
+    }
+
+    int nextWalkSound = 0;
+    public AudioSource walkSound1;
+    public AudioSource walkSound2;
+    public AudioSource walkSound3;
     void KeyboardControls()
     {
         bool sprint = false;
@@ -97,6 +131,7 @@ public class Player : MonoBehaviour
         if (Vector3.Magnitude(moveVector) > 0.1f)
         {
             lookDirection = moveVector;
+            PlayWalkSound();
         }
 
         moveVector = Vector3.Normalize(moveVector);
@@ -116,6 +151,28 @@ public class Player : MonoBehaviour
         }
 
         playerRB.velocity = moveVector * speed;
+    }
+    void PlayWalkSound()
+    {
+        if (Time.frameCount < nextWalkSound)
+        {
+            return;
+        }
+        nextWalkSound = Time.frameCount + 20;
+
+        int random = (int)Random.Range(0f, 2.99f);
+        switch (random)
+        {
+            case 0:
+                walkSound1.Play();
+                break;
+            case 1:
+                walkSound2.Play();
+                break;
+            case 2:
+                walkSound3.Play();
+                break;
+        }
     }
     IEnumerator SprintCD()
     {
@@ -150,13 +207,40 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1);
         canHammer = true;
     }
+
+    public AudioSource damage1;
+    public AudioSource damage2;
+    int nextHurtSound = 0;
     public void TakeDamage(float amount)
     {
+        if (hp < 0f)
+        {
+            return;
+        }
+
+        if (Time.frameCount > nextHurtSound)
+        {
+            PlayHurtSound();
+            nextHurtSound = Time.frameCount + 60;
+        }
+
         hp -= Mathf.Abs(amount);
         if (hp <= 0f)
         {
             Die();
         }
+    }
+    void PlayHurtSound()
+    {
+        if (Random.Range(0f, 1f) < 0.5f)
+        {
+            damage1.Play();
+        }
+        else
+        {
+            damage2.Play();
+        }
+
     }
     public void Heal(float amount)
     {

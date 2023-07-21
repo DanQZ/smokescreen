@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public float FPS = 60f;
     public GameObject MainMenuUI;
     public GameObject InGameUI;
     public GameObject GameOverUI;
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Application.targetFrameRate = 60; // sets frame rate to 60fps
+        QualitySettings.vSyncCount = 0; // if vSync is on, it puts frame rate to the monitor's frame rate, ignoring the line above
         gameStarted = false;
         mainCameraMotor.lookAt = this.gameObject.transform;
         mapGrid = new Wall[mapSizeX, mapSizeY];
@@ -329,6 +332,8 @@ public class GameManager : MonoBehaviour
             CollapseBuilding();
         }
     }
+
+    public AudioSource collapseSound;
     public void CollapseBuilding()
     {
 
@@ -343,6 +348,7 @@ public class GameManager : MonoBehaviour
         { // player immdiately dies if inside collapsing building
             currentPlayer.Die();
         }
+        collapseSound.Play();
         Invoke("GameOver", 2f);
     }
     public void GameOver()

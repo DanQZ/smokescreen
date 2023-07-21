@@ -63,6 +63,8 @@ public class Wall : MonoBehaviour
             }
         }
     }
+
+    public AudioSource fireStartSound;
     public void SetOnFire()
     {
         if (hp <= 0f || onFire || secretImmune)
@@ -73,11 +75,12 @@ public class Wall : MonoBehaviour
         {
             wetness = Mathf.Max(0f, wetness - 10f);
         }
-        Debug.Log("new wall set on fire");
+        //Debug.Log("new wall set on fire");
         onFire = true;
         fireGO = Instantiate(GM.fireObject, transform.position, transform.rotation);
         fireGO.transform.parent = transform;
         fireGO.GetComponent<Fire>().currentPlayer = GM.currentPlayer;
+        fireStartSound.Play();
     }
     void GetWet(float amount)
     {

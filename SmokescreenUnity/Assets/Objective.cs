@@ -6,6 +6,8 @@ public class Objective : MonoBehaviour
 {
     public GameManager GM;
     public string type;
+    public AudioSource airSound;
+    public AudioSource healthSound;
     // set in physics to only collide with player
     void OnTriggerEnter2D(Collider2D collision)
     {
