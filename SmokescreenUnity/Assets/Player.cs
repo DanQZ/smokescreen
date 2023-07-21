@@ -246,8 +246,10 @@ public class Player : MonoBehaviour
     {
         hp = Mathf.Max(hpMax, hp + Mathf.Abs(amount));
     }
+
     public void Die()
     {
+        GM.PlayDeathSound();
         hp = -1f;
         GM.GameOver();
         Destroy(this.gameObject);

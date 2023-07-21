@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     public int primaryObjectivesLeft;
     public int secondaryObjectivesLeft;
 
-
+    public AudioSource deathSound;
     bool gameStarted;
 
     void Awake()
@@ -365,5 +365,9 @@ public class GameManager : MonoBehaviour
             gameOverText.text = "Mission Failed!";
         }
         EndGame();
+    }
+    public void PlayDeathSound()
+    {
+        deathSound.Play();
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SledgehammerScript : MonoBehaviour
 {
+    AudioSource hitSound;
     public List<Wall> allWallsCollided = new List<Wall>();
     void Start()
     {
@@ -23,7 +24,7 @@ public class SledgehammerScript : MonoBehaviour
                 return;
             }
         }
-
+        hitSound.Play();
         Debug.Log("hit a wall");
 
         Wall collidedWall = collision.gameObject.GetComponent<Wall>();
